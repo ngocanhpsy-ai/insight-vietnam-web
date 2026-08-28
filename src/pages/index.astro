@@ -44,58 +44,43 @@ import ChatWidget from '../components/ChatWidget.astro';
             .title { color: red; }
         
             /* Điều chỉnh giao diện tab About cho màn hình di động */
-            @media only screen and (max-width: 600px) {
-            
-            /* Container chính chứa ảnh và nội dung văn bản */
-            .profile-card { /* Giả sử lớp này chứa toàn bộ phần giới thiệu */
-                display: flex;
-                flex-direction: column; /* Chuyển bố cục từ ngang sang dọc */
-                align-items: center; /* Căn giữa các phần tử theo chiều ngang */
-                padding: 20px; /* Thêm khoảng cách đệm */
-            }
+/* TỐI ƯU GIAO DIỆN ABOUT CHO ĐIỆN THOẠI */
+            @media (max-width: 768px) {
+                .about-top {
+                    display: flex;
+                    flex-direction: column; /* Chuyển bố cục từ nằm ngang sang xếp dọc */
+                    align-items: center; /* Căn giữa ảnh */
+                    gap: 20px; /* Khoảng cách giữa ảnh và phần chữ */
+                }
 
-            /* Container cho ảnh và tên */
-            .profile-header { /* Giả sử lớp này chứa ảnh và tên, chức danh */
-                display: flex;
-                flex-direction: column; /* Chuyển bố cục từ ngang sang dọc */
-                align-items: center; /* Căn giữa ảnh và tên */
-                text-align: center; /* Căn giữa văn bản */
-                width: 100%; /* Đảm bảo chiếm toàn bộ chiều ngang */
-                margin-bottom: 20px; /* Thêm khoảng cách với phần mô tả bên dưới */
-            }
+                .profile-img-container {
+                    margin-right: 0 !important; /* Xóa khoảng cách lề phải của ảnh trên desktop */
+                    width: 100%;
+                    display: flex;
+                    justify-content: center;
+                }
 
-            /* Ảnh chân dung */
-            .profile-photo { /* Lớp cho thẻ <img /> */
-                width: 150px; /* Giảm kích thước ảnh một chút để phù hợp với màn hình dọc */
-                height: 150px;
-                margin-right: 0; /* Xóa khoảng cách lề phải, thay bằng khoảng cách dưới */
-                margin-bottom: 15px;
-            }
+                .profile-img {
+                    max-width: 180px; /* Thu nhỏ ảnh một chút trên mobile cho cân đối */
+                    height: auto;
+                }
 
-            /* Tên "TS. Nguyễn Ngọc Anh" và các chức danh */
-            .profile-title { /* Lớp cho thẻ <h2> chứa tên */
-                font-size: 1.5rem; /* Điều chỉnh kích thước chữ */
-                line-height: 1.2;
-            }
+                .bio-text {
+                    width: 100%; /* Chữ chiếm toàn bộ chiều ngang màn hình */
+                    padding: 0 15px; /* Thêm lề 2 bên để chữ không sát mép điện thoại */
+                    box-sizing: border-box;
+                }
 
-            .profile-title .name-line { /* Lớp cho phần tên nếu bạn dùng HTML ở trên */
-                display: block; /* Buộc phần tên xuống dòng */
-                margin-top: 5px;
-            }
-
-            /* Đoạn văn bản mô tả */
-            .profile-description { /* Lớp chứa toàn bộ đoạn mô tả */
-                text-align: left; /* Căn trái văn bản cho dễ đọc (hoặc center nếu bạn thích) */
-                width: 100%; /* Chiếm toàn bộ chiều ngang màn hình */
-                margin-left: 0; /* Xóa khoảng cách lề trái */
-                padding: 0 10px; /* Thêm padding nhẹ */
-            }
-
-            /* Nút Chia sẻ kiến thức và các icon mạng xã hội */
-            .social-icons-row { /* Lớp chứa các icon */
-                justify-content: center; /* Căn giữa các icon */
-                margin-top: 15px;
-            }
+                .bio-text h1 {
+                    font-size: 1.8rem; /* Thu nhỏ tiêu đề TS. Nguyễn Ngọc Anh một chút để vừa trên 1-2 dòng */
+                    line-height: 1.3;
+                    margin-top: 10px;
+                }
+                
+                .bio-text p {
+                    font-size: 1rem; /* Cỡ chữ đoạn văn dễ đọc hơn trên điện thoại */
+                    text-align: justify; /* Căn đều 2 bên đoạn mô tả dài */
+                }
             }
 
         </style>
