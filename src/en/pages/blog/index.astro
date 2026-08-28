@@ -1,0 +1,119 @@
+---
+import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import BaseHead from '../../components/BaseHead.astro';
+import Footer from '../../components/Footer.astro';
+import FormattedDate from '../../components/FormattedDate.astro';
+import Header from '../../components/Header.astro';
+import { SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
+
+const posts = (await getCollection('blog')).sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+			<style>
+				/* BÊN NGOÀI CUỐN SỔ (Mặt bàn) */
+				body {
+					background-image: none; /* Xóa hình nền */
+					background-color: #f8f8ee; /* Màu nền trơn */
+					color: #2b0c06;
+					font-family: "Helvetica World", Arial, sans-serif;
+					margin: 0;
+					display: flex;
+					flex-direction: column;
+					min-height: 100vh;
+				}
+				
+				/* BÊN TRONG CUỐN SỔ (Trang giấy) */
+				main {
+					flex: 1;
+					width: 100%;
+					max-width: 1100px; /* Độ rộng sổ cố định ở giữa màn hình */
+					margin: 0 auto;
+					
+					/* Hiển thị hình nền bên trong trang sổ */
+					background-image: linear-gradient(rgba(248, 248, 238, 0.4), rgba(248, 248, 238, 0.4)), url('/ws_background_1.jpg');
+					background-size: cover;
+					background-position: center;
+					background-repeat: no-repeat;
+					
+					/* Cấu trúc vật lý của sổ */
+					border-radius: 20px 20px 0 0; /* Bo tròn 2 góc trên */
+					box-shadow: 0px -5px 25px rgba(0,0,0,0.15); /* Đổ bóng tạo cảm giác giấy nổi lên */
+					position: relative;
+					z-index: 2; /* Trọng yếu: Đè lên phần dưới của các Tabs ở Header */
+					
+					padding: 50px 40px 60px 110px; /* Thụt lề né đường kẻ xanh */
+					text-align: center;
+					box-sizing: border-box;
+				}
+				
+				/* Đường lề xanh của sổ */
+				main::before {
+					content: '';
+					position: absolute;
+					left: 80px;
+					top: 0;
+					bottom: 0;
+					width: 1px;
+					background-color: rgba(100, 150, 255, 0.6);
+				}
+
+				h1 {
+					font-family: "Helvetica Now", Arial, sans-serif;
+					font-size: 2.8rem;
+					margin-bottom: 20px;
+					text-shadow: 0px 2px 4px rgba(255,255,255,0.7);
+				}
+				p {
+					font-size: 1.15rem;
+					line-height: 1.7;
+					margin-bottom: 15px;
+					font-weight: bold;
+					text-shadow: 0px 1px 3px rgba(255,255,255,0.8);
+					max-width: 800px;
+					margin-left: auto;
+					margin-right: auto;
+				}
+				.highlight-box {
+					border: 2px solid #2b0c06;
+					padding: 20px;
+					border-radius: 8px;
+					margin-top: 30px;
+					display: inline-block;
+					background-color: rgba(248, 248, 238, 0.65);
+					backdrop-filter: blur(4px);
+				}
+			</style>
+	</head>
+	<body>
+		<Header />
+		<main>
+			<section>
+				<ul>
+					{
+						posts.map((post) => (
+							<li>
+								<a href={`/blog/${post.id}/`}>
+									{post.data.heroImage && (
+										<Image width={720} height={360} src={post.data.heroImage} alt="" />
+									)}
+									<h4 class="title">{post.data.title}</h4>
+									<p class="date">
+										<FormattedDate date={post.data.pubDate} />
+									</p>
+								</a>
+							</li>
+						))
+					}
+				</ul>
+			</section>
+		</main>
+		<Footer />
+	</body>
+</html>

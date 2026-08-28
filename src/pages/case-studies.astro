@@ -1,0 +1,379 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+---
+
+<!doctype html>
+<html lang="vi">
+    <head>
+        <BaseHead title={`Dự Án - ${SITE_TITLE}`} description="Các case studies và dự án chiến lược từ Insight Vietnam." />
+        
+        <style is:global>
+            html, body {
+                color: #2b0c06;
+                font-family: "Helvetica World", Arial, sans-serif;
+                margin: 0;
+                padding: 0;
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
+                background-color: #27201a;
+            }
+
+            body::before {
+                content: "";
+                position: fixed;
+                top: 0; left: 0; right: 0; bottom: 0;
+                background-image: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)), url('/ws_background_8.jpg');
+                background-size: 120% 120%; 
+                background-position: left center;
+                background-repeat: no-repeat;
+                z-index: 0;
+                animation: panBackground 40s linear infinite alternate; 
+            }
+
+            @keyframes panBackground {
+                0% { background-position: 0% 50%; }
+                100% { background-position: 100% 50%; }
+            }
+        </style>
+        
+        <style>
+            /* CUỐN SỔ TAY 900px */
+            main {
+                flex: 1;
+                width: 100%;
+                max-width: 900px; 
+                margin: 0 auto;
+                background-color: rgba(248, 248, 238, 0.6); 
+                backdrop-filter: blur(8px);
+                box-shadow: 0px -5px 25px rgba(0,0,0,0.4);
+                position: relative;
+                z-index: 2; 
+                display: flex;
+                flex-direction: column;
+                padding: 50px 40px 60px 40px; 
+                box-sizing: border-box;
+                min-height: 85vh;
+            }
+
+            /* ==================================== */
+            /* THIẾT KẾ FOLDER (HỒ SƠ)              */
+            /* ==================================== */
+            .folder-wrapper {
+                margin-bottom: 40px;
+                margin-top: 10px;
+            }
+
+            .folder-tab {
+                display: inline-block;
+                background-color: #6e6a61; 
+                color: #f8f8ee;
+                padding: 12px 30px;
+                font-family: "Helvetica Now", Arial, sans-serif;
+                font-size: 1.1rem;
+                font-weight: bold;
+                text-transform: uppercase;
+                /* SỬA LẠI: Vuông góc trái (0), Bo tròn góc phải (12px) */
+                border-radius: 0 12px 0 0;
+                margin-bottom: 0;
+                letter-spacing: 0.5px;
+            }
+
+            .folder-body {
+                background-color: rgba(246, 238, 220, 0.7);
+                border: 2px solid #6e6a61;
+                border-radius: 0 12px 12px 12px;
+                padding: 35px 30px;
+            }
+
+            /* ==================================== */
+            /* GIAO DIỆN BLOG CARD (DẠNG DANH SÁCH) */
+            /* ==================================== */
+            .blog-grid {
+                display: flex;
+                flex-direction: column;
+                gap: 20px; 
+            }
+
+            .blog-card {
+                border-radius: 12px;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+                background-color: #f8f8ee;
+                overflow: hidden;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                border: 1px solid rgba(110, 106, 97, 0.2);
+                
+                display: flex;
+                flex-direction: row; 
+                padding: 20px; 
+                gap: 25px; 
+                align-items: flex-start;
+            }
+            .blog-card:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0,0,0,0.12); }
+
+            .blog-img {
+                width: 160px; 
+                height: 160px; 
+                flex-shrink: 0; 
+                border-radius: 8px; 
+                background-image: linear-gradient(to bottom, rgba(43,12,6,0.1), rgba(43,12,6,0.6)), url('/case1_3.jpg');
+                background-size: cover;
+                background-position: center;
+                position: relative;
+                transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            }
+            
+            .blog-tag {
+                position: absolute;
+                bottom: 12px; left: 12px;
+                background-color: #f6eedc;
+                color: #2b0c06;
+                padding: 4px 10px;
+                border-radius: 20px;
+                font-size: 0.7rem;
+                font-weight: bold;
+                text-transform: uppercase;
+            }
+
+            .blog-content { 
+                flex: 1; 
+                padding: 0; 
+            }
+            
+            .blog-title {
+                font-family: "Helvetica Now", Arial, sans-serif;
+                font-size: 1.4rem;
+                margin: 0 0 10px 0;
+                line-height: 1.3;
+                color: #2b0c06;
+            }
+            .blog-excerpt {
+                font-size: 0.95rem;
+                line-height: 1.6;
+                margin: 0;
+                opacity: 0.85;
+            }
+
+            .read-more-hint {
+                display: inline-block;
+                margin-top: 15px;
+                font-size: 0.9rem;
+                font-weight: bold;
+                color: #6e6a61;
+                border-bottom: 1px dashed currentColor;
+            }
+
+            /* PHẦN NỘI DUNG ĐẦY ĐỦ KHI MỞ RỘNG */
+            .blog-full-text {
+                display: none;
+                margin-top: 20px;
+                font-size: 1.05rem;
+                line-height: 1.7;
+                border-top: 1px solid rgba(43, 12, 6, 0.1);
+                padding-top: 25px;
+            }
+            
+            .blog-full-text h4 { font-size: 1.2rem; margin: 30px 0 15px 0; color: #2b0c06; }
+            .blog-full-text p { margin-bottom: 15px; }
+            .blog-full-text ul { padding-left: 20px; margin-bottom: 15px; }
+            .blog-full-text li { margin-bottom: 10px; }
+            
+            .content-img {
+                width: 100%;
+                border-radius: 8px;
+                margin: 25px 0;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+                border: 1px solid rgba(43, 12, 6, 0.1);
+            }
+
+            /* TRẠNG THÁI MỞ RỘNG BÀI VIẾT */
+            .blog-card.is-open { 
+                flex-direction: column; 
+                cursor: default; 
+                transform: none; 
+                box-shadow: 0 8px 30px rgba(0,0,0,0.15); 
+            }
+            .blog-card.is-open .blog-img { 
+                width: 100%; 
+                height: 240px; 
+            }
+            .blog-card.is-open .blog-excerpt, .blog-card.is-open .read-more-hint { display: none; }
+            .blog-card.is-open .blog-full-text { display: block; animation: fadeIn 0.4s ease forwards; }
+
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(10px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+
+            .close-blog-btn {
+                display: none;
+                margin-top: 30px;
+                background-color: transparent;
+                border: 1.5px solid #6e6a61;
+                color: #6e6a61;
+                padding: 10px 30px;
+                border-radius: 50px;
+                font-weight: bold;
+                cursor: pointer;
+                transition: all 0.2s;
+            }
+            .blog-card.is-open .close-blog-btn { display: inline-block; }
+            .close-blog-btn:hover { background-color: #6e6a61; color: #f8f8ee; }
+
+            .empty-state {
+                text-align: center;
+                padding: 30px 0;
+                color: #6e6a61;
+                font-style: italic;
+                opacity: 0.8;
+            }
+
+            @media (max-width: 768px) {
+                main { padding: 40px 20px; }
+                .folder-body { padding: 20px 15px; }
+                .blog-card { flex-direction: column; padding: 15px; gap: 15px; }
+                .blog-img { width: 100%; height: 180px; }
+            }
+        </style>
+    </head>
+    
+    <body>
+        <Header />
+        
+        <main>
+            <!-- FOLDER 1: DỰ ÁN ĐÃ HOÀN THÀNH -->
+            <div class="folder-wrapper">
+                <div class="folder-tab">Các dự án đã hoàn thành</div>
+                <div class="folder-body">
+                    
+                    <div class="blog-grid" id="completedProjects">
+                        
+                        <div class="blog-card">
+                            <div class="blog-img">
+                                <span class="blog-tag">Chiến lược địa điểm</span>
+                            </div>
+                            
+                            <div class="blog-content">
+                                <h3 class="blog-title">Bài toán mở rộng chi nhánh cho Boutique Spa phân khúc cao cấp</h3>
+                                
+                                <p class="blog-excerpt">
+                                    Có lẽ hai câu hỏi khiến nhiều founder D2C, đặc biệt là founder ở thị trường ngách, trăn trở nhất là: Tệp khách thật sự hợp gu với mình có bao nhiêu trên thị trường? Và nếu mở chi nhánh, nên mở ở đâu để tối ưu tăng trưởng?...
+                                </p>
+                                <span class="read-more-hint">Nhấp để xem chi tiết &rarr;</span>
+
+                                <!-- NỘI DUNG FULL CHI TIẾT -->
+                                <div class="blog-full-text">
+                                    <p>Có lẽ hai câu hỏi khiến nhiều founder D2C, đặc biệt là founder ở thị trường ngách, trăn trở nhất là:</p>
+                                    <ul>
+                                        <li>Tệp khách thật sự hợp gu với mình có bao nhiêu trên thị trường?</li>
+                                        <li>Nếu mở điểm bán/chi nhánh, nên mở ở đâu để tối ưu tăng trưởng dựa trên chính tệp khách đó?</li>
+                                    </ul>
+                                    <p>Khi nói chuyện với một số founder local brand, mình nhận ra các bài toán như phân khúc khách hàng, định cỡ thị trường, và chiến lược địa điểm vẫn thường chưa được tối ưu hóa đúng mức. Không phải vì founder không quan tâm đến dữ liệu, mà vì tại Việt Nam, nghiên cứu thị trường vẫn thường bị nhìn như một dịch vụ khá xa xỉ: làm khảo sát diện rộng, mua dữ liệu từ các đơn vị lớn, chờ báo cáo nhiều tuần hoặc nhiều tháng, với chi phí không hề nhỏ.</p>
+                                    <p>Nhưng với các mô hình ngách, nghiên cứu thị trường đại trà chưa chắc đã là cách tối ưu nhất.</p>
+                                    
+                                    <h4>Bài toán của Boutique Spa</h4>
+                                    <p>Một ví dụ gần đây mình làm một case cho một spa thẩm mỹ cao cấp ở TP.HCM, mình nhận được câu hỏi của chủ spa là: <em>“Chi nhánh đầu tiên đã kịch trần doanh thu, liệu ngoài kia còn đủ khách hàng phù hợp để mở chi nhánh thứ hai không? Và nếu mở thì nên mở ở đâu?”</em></p>
+                                    <p>Đây không phải một spa đại trà. Qua phân khúc khách hàng bằng tâm lý, dữ liệu cho thấy nhóm khách của spa này mang 1 đặc điểm tiến hóa tồn tại ở 20-30% dân số ở mọi môi trường khác nhau (hội chứng nhạy cảm cảm giác, tên tiếng Anh là <strong>Sensory Processing Sensitivity</strong>), do đó pain point của họ rất đặc biệt, đủ để khiến họ di chuyển hơn 10km/ 2 lần/ tháng để trải nghiệm dịch vụ của spa này.</p>
+                                    <p>Khi phân khúc khách hàng của brand đặc thù ở mức này, bài toán địa điểm không còn là “khu nào đông khách”, thậm chí cũng không phải là “buôn có bạn, bán có phường”. Mà là:</p>
+                                    <ul>
+                                        <li>Còn bao nhiêu người ngoài kia thật sự phù hợp với định vị của mình?</li>
+                                        <li>Khu vực nào đảm bảo DNA của brand cho tệp khách này.</li>
+                                        <li>Đâu là nơi có xác suất hoàn vốn tốt hơn, dựa trên đúng tệp khách mình phục vụ?</li>
+                                    </ul>
+
+                                    <img src="/case1_3.jpg" alt="Bản đồ chiến lược địa điểm" class="content-img" />
+
+                                    <p>Khi đưa dữ liệu vào: dân cư, sức chi, mật độ dịch vụ làm đẹp, đối thủ, hệ sinh thái tiêu dùng xung quanh, hành vi di chuyển và phân bố khách hiện tại, ba khu vực cho ra ba kết luận rất khác nhau.</p>
+                                    
+                                    <h4>1. Tân Sơn Nhì, Tân Phú: đông nhưng chưa chắc đúng</h4>
+                                    <p>Khu này có thị trường lớn, dân đông, hoạt động thương mại mạnh, tín hiệu nhu cầu làm đẹp rõ, nhưng với concept boutique spa này, độ khớp với tệp khách mục tiêu chưa đủ tốt. Rủi ro chia khách với cơ sở hiện tại cũng cao hơn. Tức là khu này có thị trường, nhưng chưa chắc là thị trường của mình.</p>
+
+                                    <h4>2. An Khánh, Thủ Đức: tiềm năng, nhưng hơi sớm</h4>
+                                    <p>Khu này có sức chi và tăng trưởng dân cư tốt. Thống kê cho thấy dân số khu vực này tăng 4%/ năm, nhưng hệ sinh thái dịch vụ chăm sóc da/thẩm mỹ tại chưa trưởng thành đủ. Khách có khả năng chi trả, nhưng chưa có thói quen tiêu dùng dịch vụ này ngay trong khu vực họ sống.</p>
+                                    <p>Nếu vốn dài, đây là khu nên theo dõi, nhưng nếu cần hoàn vốn nhanh, mở quá sớm có thể đồng nghĩa với việc mình phải tự giáo dục thị trường trong 1–2 năm đầu, chưa kể chi phí cố định để đầu tư địa điểm và trang thiết bị phải được nâng cấp để tăng cạnh tranh trong thị phần cao cấp.</p>
+
+                                    <h4>3. Tân Hưng, Quận 7: bất ngờ, không ồn ào, nhưng hợp nhất</h4>
+                                    <p>Khu này không thắng vì một chỉ số quá đẹp, nó thắng vì tổng thể các yếu tố cân bằng: ít rủi ro chia khách, độ khớp với tệp khách tốt, khu Nam Sài Gòn có nhu cầu chưa được phục vụ đủ cho mô hình boutique spa, và hệ sinh thái đã đủ chín để khách dễ chuyển đổi hơn.</p>
+                                    <p>Đây là kiểu địa điểm nếu chỉ đi ngang qua để “feel” thì không thấy quá nổi bật, nhưng dữ liệu sẽ cho thấy một bức tranh hoàn toàn khác.</p>
+
+                                    <img src="/case1_4.jpg" alt="Bảng số liệu khuyến nghị địa điểm" class="content-img" />
+
+                                    <h4>Chiến lược Tăng trưởng</h4>
+                                    <p><strong>Tinh chỉnh nội dung</strong></p>
+                                    <ul>
+                                        <li>Chuyển hướng nội dung sang một trải nghiệm tĩnh tại và ít kích thích hơn bằng cách sử dụng hình ảnh tĩnh, bố cục tối giản, bảng màu dịu nhẹ và giảm thiểu các yếu tố thị giác mạnh. &rarr; <em>Khách hàng báo cáo tỷ lệ chuyển đổi tăng ~15% sau khi thay đổi nội dung, đặc biệt là qua TikTok.</em></li>
+                                        <li>Nhấn mạnh vào sự thoải mái đa giác quan, sự chăm sóc cá nhân hóa và tổng thể trải nghiệm thay vì chỉ tập trung vào chuyên môn kỹ thuật.</li>
+                                    </ul>
+                                    <p><strong>Tín hiệu địa điểm</strong></p>
+                                    <ul>
+                                        <li>Ưu tiên các khu vực phù hợp với hệ sinh thái lối sống của phân khúc khách hàng mục tiêu: các không gian chăm sóc sức khỏe (wellness), không gian nghệ thuật, mảng xanh và các quán café khu dân cư yên tĩnh.</li>
+                                        <li>Đánh giá các địa điểm không chỉ dựa trên nhu cầu, mà còn dựa trên độ khớp khách hàng, độ trưởng thành của thị trường, khả năng tiếp cận và mức độ trùng lặp với cơ sở hiện tại.</li>
+                                    </ul>
+
+                                    <h4>Lời kết</h4>
+                                    <p>Địa điểm tốt không phải lúc nào cũng là nơi đông nhất, mà là nơi có xác suất cao nhất để gặp đúng khách, đúng thời điểm, đúng mô hình, và đúng dòng tiền.</p>
+                                    <p>Với các founder ở thị trường ngách, mình nghĩ lợi thế không nằm ở việc có thật nhiều dữ liệu. Lợi thế nằm ở việc biết hỏi đúng câu hỏi, chọn đúng tín hiệu, và biến dữ liệu thành quyết định kinh doanh cụ thể. Đây cũng là hướng mình đang theo đuổi: kết hợp dữ liệu thị trường, phân tích hành vi khách hàng và tư duy ra quyết định để giúp founder nhìn rõ hơn trước khi xuống tiền.</p>
+                                    <p>Vì đôi khi, rủi ro lớn nhất không phải là chọn một khu vực “xấu”, mà là chọn một khu vực nhìn rất đẹp, nhưng đẹp cho mô hình của người khác.</p>
+
+                                    <img src="/case1_5.png" alt="Phương pháp phân tích dữ liệu" class="content-img" />
+
+                                    <hr style="margin: 30px 0; border: none; border-top: 1px dashed rgba(110, 106, 97, 0.4);">
+                                    
+                                    <p style="font-size: 0.95rem; font-style: italic; line-height: 1.6;">
+                                        Với nền tảng khoa học chuyên sâu về hành vi khách hàng và phân tích dữ liệu, Insight Vietnam giúp các doanh nghiệp vừa và nhỏ hiểu về khách hàng của mình, thương hiệu của mình, thị trường của mình và địa điểm mở bán phù hợp với mình.<br><br>
+                                        <strong>Để được tư vấn trực tiếp, vui lòng liên hệ: </strong>
+                                        <a href="mailto:anh.nguyen@insightlabvietnam.com" style="color: #6e6a61; text-decoration: underline; font-weight: bold;">anh.nguyen@insightlabvietnam.com</a><br>
+                                    </p>
+                                    
+                                    <button class="close-blog-btn">Đóng dự án</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- FOLDER 2: DỰ ÁN ĐANG THỰC HIỆN -->
+            <div class="folder-wrapper">
+                <div class="folder-tab" style="background-color: rgba(110, 106, 97, 0.6);">Các dự án đang thực hiện</div>
+                <div class="folder-body" style="border-color: rgba(110, 106, 97, 0.6);">
+                    <div class="empty-state">
+                        <svg viewBox="0 0 24 24" width="40" height="40" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 10px; opacity: 0.5;">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polyline points="12 6 12 12 16 14"></polyline>
+                        </svg>
+                        <p>Dữ liệu đang được phân tích và bảo mật theo yêu cầu của khách hàng.<br>Case studies mới sẽ sớm được cập nhật.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="flex: 1;"></div>
+            <Footer />
+        </main>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const blogCards = document.querySelectorAll('.blog-card');
+
+                blogCards.forEach(card => {
+                    card.addEventListener('click', (e) => {
+                        if (e.target.classList.contains('close-blog-btn')) {
+                            e.stopPropagation();
+                            card.classList.remove('is-open');
+                            card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                            return;
+                        }
+                        if (!card.classList.contains('is-open')) {
+                            card.classList.add('is-open');
+                        }
+                    });
+                });
+            });
+        </script>
+    </body>
+</html>

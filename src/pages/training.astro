@@ -1,0 +1,306 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import { SITE_TITLE } from '../consts';
+---
+
+<!doctype html>
+<html lang="vi">
+    <head>
+        <BaseHead title={`Đào Tạo - ${SITE_TITLE}`} description="Chương trình đào tạo 1-1 về chiến lược dữ liệu và hành vi khách hàng từ Insight Vietnam." />
+        
+        <style is:global>
+            html, body {
+                color: #2b0c06;
+                font-family: "Helvetica World", Arial, sans-serif;
+                margin: 0; padding: 0; min-height: 100vh;
+                display: flex; flex-direction: column; background-color: #27201a;
+            }
+            body::before {
+                content: ""; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+                background-image: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)), url('/ws_background_8.jpg');
+                background-size: 120% 120%; background-position: left center;
+                background-repeat: no-repeat; z-index: 0;
+                animation: panBackground 40s linear infinite alternate; 
+            }
+            @keyframes panBackground {
+                0% { background-position: 0% 50%; }
+                100% { background-position: 100% 50%; }
+            }
+        </style>
+        
+        <style>
+            main {
+                flex: 1; width: 100%; max-width: 950px; margin: 0 auto;
+                background-color: rgba(248, 248, 238, 0.7); backdrop-filter: blur(10px);
+                box-shadow: 0px -5px 25px rgba(0,0,0,0.4); position: relative; z-index: 2; 
+                display: flex; flex-direction: column; padding: 60px 50px 80px 50px; 
+                box-sizing: border-box; min-height: 85vh;
+            }
+
+            .intro-text {
+                font-size: 1.1rem; line-height: 1.8; margin-bottom: 35px;
+                margin-top: 10px; color: #2b0c06;
+            }
+
+            .info-grid {
+                display: grid; grid-template-columns: repeat(3, 1fr);
+                gap: 20px; margin-bottom: 50px;
+            }
+            .info-card {
+                background-color: rgba(246, 238, 220, 0.8); border: 1px solid rgba(43, 12, 6, 0.2);
+                border-radius: 12px; padding: 20px; display: flex; flex-direction: column; gap: 10px;
+            }
+            .info-card h4 {
+                margin: 0; font-size: 1rem; color: #531c24; text-transform: uppercase;
+                display: flex; align-items: center; gap: 8px;
+            }
+            .info-card p { margin: 0; font-size: 0.95rem; line-height: 1.5; }
+
+            /* LỘ TRÌNH ĐÀO TẠO TĨNH */
+            .training-grid {
+                display: grid; grid-template-columns: repeat(2, 1fr); gap: 30px;
+            }
+            .static-card {
+                border-radius: 4px; padding: 40px 35px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+                display: flex; flex-direction: column; justify-content: flex-start;
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+            }
+            .static-card:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
+            .static-card h4 {
+                font-family: "Helvetica Now", Arial, sans-serif; margin: 0 0 20px 0;
+                font-size: 1.3rem; text-align: center; line-height: 1.4;
+            }
+            .static-card ul { margin: 0; padding-left: 20px; list-style-type: disc; }
+            .static-card li { font-size: 0.95rem; line-height: 1.6; margin-bottom: 12px; }
+            .static-card li:last-child { margin-bottom: 0; }
+
+            .theme-dark { background-color: #3b1318; color: #f8f8ee; }
+            .theme-light { background-color: #f8f8ee; color: #3b1318; border: 2px solid #3b1318; }
+
+            /* CTA & POPUP */
+            .cta-container {
+                text-align: center; margin-top: 60px; margin-bottom: 60px;
+                padding-top: 40px; border-top: 1px dashed rgba(43, 12, 6, 0.3);
+            }
+            .btn-cta {
+                display: inline-block; background-color: #531c24; color: #f8f8ee;
+                font-family: inherit; font-size: 1.1rem; font-weight: bold;
+                padding: 15px 40px; border: none; border-radius: 50px;
+                cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(83, 28, 36, 0.3);
+            }
+            .btn-cta:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(83, 28, 36, 0.4); }
+
+            .modal-overlay {
+                position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0,0,0,0.6);
+                display: flex; justify-content: center; align-items: center; z-index: 9999;
+                visibility: hidden; opacity: 0; transition: all 0.3s ease; backdrop-filter: blur(3px);
+            }
+            .modal-overlay.show { visibility: visible; opacity: 1; }
+            
+            .modal-content {
+                background-color: #f6eedc; padding: 40px; border-radius: 12px;
+                box-shadow: 0 15px 40px rgba(0,0,0,0.3); max-width: 450px; width: 90%;
+                border: 2px solid #2b0c06; position: relative; transform: translateY(20px); transition: transform 0.3s ease;
+            }
+            .modal-overlay.show .modal-content { transform: translateY(0); }
+
+            .close-modal {
+                position: absolute; top: 15px; right: 20px; background: none; border: none;
+                font-size: 1.5rem; cursor: pointer; color: #2b0c06;
+            }
+            .modal-title {
+                font-family: "Helvetica Now", Arial, sans-serif; font-size: 1.3rem; margin-top: 0;
+                margin-bottom: 25px; color: #531c24; text-align: center; text-transform: uppercase;
+            }
+
+            .booking-form { display: flex; flex-direction: column; gap: 15px; }
+            .booking-form input, .booking-form select {
+                font-family: inherit; font-size: 1rem; padding: 12px 15px;
+                background-color: rgba(255,255,255,0.5); border: 1px solid rgba(43, 12, 6, 0.3);
+                border-radius: 8px; color: #2b0c06; transition: border-color 0.3s;
+            }
+            .booking-form input:focus, .booking-form select:focus { outline: none; border-color: #531c24; }
+            
+            /* CSS CHỌN NGÀY GIỜ */
+            .datetime-row { display: flex; gap: 15px; }
+            .datetime-row input, .datetime-row select { flex: 1; color-scheme: light; }
+            .datetime-row select {
+                appearance: none; background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%232b0c06%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+                background-repeat: no-repeat; background-position: right 15px top 50%; background-size: 12px auto;
+            }
+
+            .btn-submit {
+                background-color: #2b0c06; color: #f8f8ee; border: none; padding: 15px 0;
+                font-family: inherit; font-weight: bold; font-size: 1.05rem; border-radius: 8px;
+                cursor: pointer; margin-top: 10px; transition: all 0.3s ease;
+            }
+            .btn-submit:hover { background-color: #531c24; }
+
+            @media (max-width: 768px) {
+                main { padding: 40px 25px; }
+                .info-grid, .training-grid { grid-template-columns: 1fr; }
+                .datetime-row { flex-direction: column; gap: 15px; }
+            }
+        </style>
+    </head>
+    
+    <body>
+        <Header />
+        
+        <main>
+            <div class="intro-text">
+                <p><b>Chúng tôi không chỉ tư vấn mà còn đồng hành chuyển giao năng lực.</b></p>
+                <p>Chương trình đào tạo 1-1 chuyên sâu dành cho Founders và cấp Quản lý hướng đến việc xây dựng cho bạn năng lực thực chiến: thu thập, xác thực, phân tích và đọc hiểu dữ liệu nội bộ, thị trường và hành vi khách hàng. Từ nền tảng đó, bạn có thể tự mình đưa ra các quyết định tăng trưởng một cách độc lập và bền vững nhất.</p>
+            </div>
+
+            <div class="info-grid">
+                <div class="info-card">
+                    <h4><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> Thời lượng</h4>
+                    <p>Tùy phạm vi câu hỏi và bài toán của doanh nghiệp.</p>
+                </div>
+                <div class="info-card">
+                    <h4><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg> Hình thức</h4>
+                    <p>Đào tạo 1-1, thiết kế dựa trên chính case thực tế của doanh nghiệp.</p>
+                </div>
+                <div class="info-card">
+                    <h4><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg> Chi phí</h4>
+                    <p><strong>Buổi lẻ:</strong> 2,000,000đ / Buổi x 2 tiếng<br><strong>Lộ trình cơ bản:</strong> 15,000,000đ / 8 buổi x 2 tiếng</p>
+                </div>
+            </div>
+
+            <div class="training-grid">
+                <div class="static-card theme-dark">
+                    <h4>① Xác định bài toán kinh doanh</h4>
+                    <ul>
+                        <li>Xác định vấn đề doanh nghiệp đang cần ra quyết định: khách hàng, doanh thu, marketing, sản phẩm, địa điểm hoặc mở rộng.</li>
+                        <li>Chuyển vấn đề kinh doanh thành câu hỏi có thể kiểm tra bằng dữ liệu.</li>
+                    </ul>
+                </div>
+                <div class="static-card theme-light">
+                    <h4>② Thu thập & Kiểm tra dữ liệu</h4>
+                    <ul>
+                        <li>Đánh giá nền tảng dữ liệu nội bộ và xác định các nguồn bên ngoài.</li>
+                        <li>Lựa chọn nguồn dữ liệu tối ưu dựa trên ngân sách và hiệu quả với bài toán đặt ra.</li>
+                        <li>Kiểm định độ tin cậy của dữ liệu.</li>
+                        <li>Hiểu và áp dụng các phương pháp đo lường, lượng hóa cơ bản.</li>
+                    </ul>
+                </div>
+                <div class="static-card theme-light">
+                    <h4>③ Xây dựng mô hình phân tích & dự báo</h4>
+                    <ul>
+                        <li>Lựa chọn phương pháp phân tích phù hợp với vấn đề và hệ thống dữ liệu.</li>
+                        <li>Đọc hiểu và diễn dịch kết quả phân tích.</li>
+                        <li>Đánh giá độ tin cậy của mô hình và nhận diện tác động của các yếu tố ngoài tầm kiểm soát.</li>
+                    </ul>
+                </div>
+                <div class="static-card theme-dark">
+                    <h4>④ Ứng dụng & Theo dõi kết quả</h4>
+                    <ul>
+                        <li>Xây dựng chiến lược tăng trưởng thực chiến từ kết quả phân tích.</li>
+                        <li>Thiết lập hệ thống theo dõi và đo lường hiệu suất (ROI) qua từng giai đoạn.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="cta-container">
+                <button class="btn-cta" id="openModalBtn">Đặt lịch trao đổi về chương trình tại Đây</button>
+            </div>
+            
+            <div style="flex: 1;"></div>
+            <Footer />
+        </main>
+
+        <!-- POPUP ĐẶT LỊCH KÈM TÍNH NĂNG CHỌN NGÀY GIỜ -->
+        <div class="modal-overlay" id="bookingModal">
+            <div class="modal-content">
+                <button class="close-modal" id="closeModalBtn">&times;</button>
+                <h3 class="modal-title">Đặt lịch trao đổi</h3>
+                
+                <form id="trainingForm" class="booking-form">
+                    <!-- THAY MÃ ACCESS KEY CỦA BẠN VÀO ĐÂY -->
+                    <input type="hidden" name="access_key" value="DÁN_MÃ_ACCESS_KEY_CỦA_BẠN_VÀO_ĐÂY">
+                    <input type="hidden" name="subject" value="[ĐÀO TẠO] Đặt lịch trao đổi chương trình 1-1">
+                    <input type="hidden" name="from_name" value="Insight Training">
+
+                    <input type="text" name="name" placeholder="Họ và Tên *" required>
+                    <input type="text" name="company" placeholder="Công ty / Doanh nghiệp">
+                    <input type="email" name="email" placeholder="Địa chỉ Email *" required>
+                    <input type="tel" name="phone" placeholder="Số điện thoại liên hệ *" required>
+                    
+                    <div class="datetime-row">
+                        <input type="date" name="preferred_date" id="trainingBookDate" required title="Chọn ngày (trong 3 tuần tới)">
+                        <select name="preferred_time" required>
+                            <option value="" disabled selected>Khung giờ *</option>
+                            <option value="Sáng (09:00 - 11:30)">Sáng (09:00 - 11:30)</option>
+                            <option value="Chiều (14:00 - 17:00)">Chiều (14:00 - 17:00)</option>
+                        </select>
+                    </div>
+                    
+                    <button type="submit" class="btn-submit">Gửi Yêu Cầu</button>
+                </form>
+            </div>
+        </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                // LOGIC HỘP THOẠI MODAL
+                const modal = document.getElementById('bookingModal');
+                const openBtn = document.getElementById('openModalBtn');
+                const modalCloseBtn = document.getElementById('closeModalBtn');
+                
+                openBtn.addEventListener('click', () => modal.classList.add('show'));
+                modalCloseBtn.addEventListener('click', () => modal.classList.remove('show'));
+                modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('show'); });
+
+                // LOGIC GIỚI HẠN NGÀY ĐẶT LỊCH (21 Ngày tới)
+                const dateInput = document.getElementById('trainingBookDate');
+                if(dateInput) {
+                    const today = new Date();
+                    const maxDate = new Date();
+                    maxDate.setDate(today.getDate() + 21);
+                    const formatDate = (date) => date.toISOString().split('T')[0];
+                    dateInput.min = formatDate(today);
+                    dateInput.max = formatDate(maxDate);
+                }
+
+                // LOGIC GỬI FORM WEB3FORMS
+                const form = document.getElementById('trainingForm');
+                if (form) {
+                    const submitBtn = form.querySelector('.btn-submit');
+                    form.addEventListener('submit', async (e) => {
+                        e.preventDefault(); 
+                        const formData = new FormData(form);
+                        const object = Object.fromEntries(formData);
+                        const json = JSON.stringify(object);
+
+                        const originalText = submitBtn.innerText;
+                        submitBtn.innerText = 'Đang gửi...';
+                        submitBtn.disabled = true;
+
+                        try {
+                            const response = await fetch('https://api.web3forms.com/submit', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                                body: json
+                            });
+                            if (response.status === 200) {
+                                alert('Cám ơn bạn đã gửi yêu cầu! Insight Vietnam sẽ liên hệ với bạn trong thời gian sớm nhất.');
+                                form.reset();
+                                modal.classList.remove('show');
+                            } else {
+                                alert('Xin lỗi, có lỗi xảy ra. Vui lòng thử lại sau.');
+                            }
+                        } catch (error) {
+                            alert('Xin lỗi, đã mất kết nối. Vui lòng thử lại sau.');
+                        } finally {
+                            submitBtn.innerText = originalText;
+                            submitBtn.disabled = false;
+                        }
+                    });
+                }
+            });
+        </script>
+    </body>
+</html>

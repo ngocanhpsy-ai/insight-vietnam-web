@@ -1,0 +1,240 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import { SITE_TITLE } from '../consts';
+---
+
+<!doctype html>
+<html lang="vi">
+    <head>
+        <BaseHead title={`Liên Hệ - ${SITE_TITLE}`} description="Liên hệ với Insight Vietnam để được tư vấn chiến lược." />
+        
+        <style is:global>
+            html, body {
+                color: #2b0c06;
+                font-family: "Helvetica World", Arial, sans-serif;
+                margin: 0;
+                padding: 0;
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
+                background-color: #27201a;
+            }
+
+            body::before {
+                content: "";
+                position: fixed;
+                top: 0; left: 0; right: 0; bottom: 0;
+                background-image: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)), url('/ws_background_8.jpg');
+                background-size: 120% 120%; 
+                background-position: left center;
+                background-repeat: no-repeat;
+                z-index: 0;
+                animation: panBackground 40s linear infinite alternate; 
+            }
+
+            @keyframes panBackground {
+                0% { background-position: 0% 50%; }
+                100% { background-position: 100% 50%; }
+            }
+        </style>
+        
+        <style>
+            /* ĐÃ SỬA: Đổi max-width thành 900px để khớp với trang Dịch Vụ */
+            main {
+                flex: 1;
+                width: 100%;
+                max-width: 900px; 
+                margin: 0 auto;
+                background-color: rgba(248, 248, 238, 0.7); 
+                backdrop-filter: blur(10px);
+                box-shadow: 0px -5px 25px rgba(0,0,0,0.4);
+                position: relative;
+                z-index: 2; 
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                padding: 60px 40px; 
+                box-sizing: border-box;
+                min-height: 85vh;
+            }
+
+            .contact-desc {
+                font-size: 1.15rem;
+                line-height: 1.6;
+                margin-bottom: 40px;
+                max-width: 600px;
+                color: #531c24;
+                text-align: center;
+            }
+
+            /* THIẾT KẾ KHUNG THÔNG TIN DANH THIẾP */
+            .contact-card {
+                background-color: rgba(246, 238, 220, 0.9);
+                border: 1px solid rgba(43, 12, 6, 0.3);
+                border-radius: 12px;
+                padding: 40px;
+                width: 100%;
+                max-width: 750px; /* Tăng nhẹ chiều rộng card để chứa địa chỉ dài */
+                box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            }
+
+            .contact-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 40px; /* Tăng khoảng cách giữa 2 cột */
+                margin-bottom: 30px;
+            }
+
+            .contact-item {
+                display: flex;
+                flex-direction: column;
+                gap: 12px; /* Tăng nhẹ khoảng cách giữa các dòng */
+            }
+
+            .contact-item h4 {
+                font-family: "Helvetica Now", Arial, sans-serif;
+                font-size: 0.95rem;
+                color: #6e6a61;
+                text-transform: uppercase;
+                margin: 0;
+                letter-spacing: 1px;
+                border-bottom: 1px solid rgba(110, 106, 97, 0.3);
+                padding-bottom: 8px;
+            }
+
+            .contact-item p {
+                margin: 0;
+                font-size: 1.05rem;
+                line-height: 1.5;
+                color: #2b0c06;
+            }
+            
+            .contact-item .highlight {
+                font-weight: bold;
+                color: #531c24;
+            }
+
+            .email-link {
+                font-weight: bold;
+                color: #531c24;
+                text-decoration: none;
+                transition: opacity 0.3s ease;
+            }
+            .email-link:hover { opacity: 0.7; }
+            
+            .website-link {
+                color: #2b0c06;
+                text-decoration: none;
+                border-bottom: 1px solid currentColor;
+                transition: opacity 0.3s ease;
+            }
+            .website-link:hover { opacity: 0.6; }
+
+            /* MẠNG XÃ HỘI BÊN DƯỚI */
+            .social-section {
+                text-align: center;
+                margin-top: 20px;
+            }
+            .social-section h4 {
+                font-family: "Helvetica Now", Arial, sans-serif;
+                font-size: 0.95rem;
+                color: #6e6a61;
+                text-transform: uppercase;
+                margin: 0 0 15px 0;
+                letter-spacing: 1px;
+            }
+            .social-links {
+                display: flex;
+                justify-content: center;
+                gap: 20px;
+            }
+
+            .social-btn {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                background-color: #2b0c06;
+                color: #f6eedc;
+                padding: 12px 25px;
+                border-radius: 50px;
+                text-decoration: none;
+                font-weight: bold;
+                font-size: 0.95rem;
+                transition: all 0.3s ease;
+            }
+            .social-btn:hover {
+                background-color: #531c24;
+                transform: translateY(-3px);
+                box-shadow: 0 5px 15px rgba(83, 28, 36, 0.3);
+            }
+
+            @media (max-width: 768px) {
+                main { padding: 40px 20px; }
+                .contact-card { padding: 30px 20px; }
+                .contact-grid { grid-template-columns: 1fr; gap: 25px; }
+                .social-links { flex-direction: column; gap: 15px; align-items: stretch; }
+                .social-btn { justify-content: center; }
+            }
+        </style>
+    </head>
+    
+    <body>
+        <Header />
+        
+        <main>
+            <p class="contact-desc">
+                Cám ơn bạn đã quan tâm đến Insight Vietnam.<br> Hãy kết nối trực tiếp với chúng tôi để được tư vấn và hỗ trợ.
+            </p>
+            
+            <div class="contact-card">
+                <div class="contact-grid">
+                    
+                    <!-- VĂN PHÒNG ĐỨC -->
+                    <div class="contact-item">
+                        <h4>Trụ sở tại Đức</h4>
+                        <p class="highlight">Hallstadter Str. 6, 96052 Bamberg,<br>Germany</p>
+                        <p>Điện thoại: +49 175 879 24 29</p>
+                    </div>
+
+                    <!-- ĐẠI DIỆN TẠI VIỆT NAM -->
+                    <div class="contact-item">
+                        <h4>Đại diện tại Việt Nam</h4>
+                        <p class="highlight">Fortune Advisory</p>
+                        <p>Tầng 8, Số 100 Nguyễn Thị Minh Khai,<br>Phường Võ Thị Sáu, Quận 3, TP. Hồ Chí<br>Minh, Việt Nam</p>
+                        <p><a href="https://fortune-advisory.com/" target="_blank" rel="noopener noreferrer" class="website-link">https://fortune-advisory.com/</a></p>
+                    </div>
+
+                    <!-- EMAIL LIÊN HỆ -->
+                    <div class="contact-item" style="grid-column: 1 / -1;">
+                        <h4>Email hỗ trợ trực tiếp</h4>
+                        <p><a href="mailto:anh.nguyen@insightlabvietnam.com" class="email-link">anh.nguyen@insightlabvietnam.com</a></p>
+                    </div>
+
+                </div>
+
+                <hr style="border: none; border-top: 1px dashed rgba(43,12,6,0.2); margin: 30px 0;">
+
+                <!-- MẠNG XÃ HỘI -->
+                <div class="social-section">
+                    <h4>Kết nối trực tuyến</h4>
+                    <div class="social-links">
+                        <a href="https://www.linkedin.com/in/nguyenngocanhbu/" target="_blank" rel="noopener noreferrer" class="social-btn">
+                            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                            LinkedIn
+                        </a>
+                        <a href="https://www.facebook.com/insightlabvietnam/" target="_blank" rel="noopener noreferrer" class="social-btn" style="background-color: #6e6a61;">
+                            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.469h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.469h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                            Facebook
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="flex: 1;"></div>
+            <Footer />
+        </main>
+    </body>
+</html>

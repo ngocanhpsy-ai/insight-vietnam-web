@@ -1,0 +1,129 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+---
+
+<!doctype html>
+<html lang="vi">
+    <head>
+        <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+        
+				<!-- BẮT BUỘC: HÌNH NỀN PHONG CẢNH BÊN NGOÀI -->
+<style is:global>
+            html, body {
+                color: #2b0c06;
+                font-family: "Helvetica World", Arial, sans-serif;
+                margin: 0;
+                padding: 0;
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
+                background-color: #27201a; /* Màu nền phụ phòng hờ ảnh lỗi */
+            }
+
+            /* LỚP MÀN CHIẾU ẢNH ĐỘNG */
+            body::before {
+                content: "";
+                position: fixed;
+                top: 0; left: 0; right: 0; bottom: 0;
+                
+                /* LƯU Ý: Nếu ảnh vẫn chưa hiện, hãy kiểm tra lại chính xác tên file trong thư mục public */
+                background-image: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)), url('/ws_background_8.jpg');
+                background-size: 120% 120%; 
+                background-position: left center;
+                background-repeat: no-repeat;
+                
+                z-index: 0; /* ĐÃ SỬA: Nâng lên lớp 0 để đè lên nền đen */
+                animation: panBackground 40s linear infinite alternate; 
+            }
+
+            @keyframes panBackground {
+                0% { background-position: 0% 50%; }
+                100% { background-position: 100% 50%; }
+            }
+        </style>
+        
+        <style>
+            main {
+                flex: 1;
+                width: 100%;
+                max-width: 900px; 
+                margin: 0 auto;
+                
+                background-color: rgba(248, 248, 238, 0.6); 
+                backdrop-filter: blur(8px);
+                
+                border-radius: 0; 
+                box-shadow: 0px -5px 25px rgba(0,0,0,0.4);
+                position: relative;
+                z-index: 2; /* Cuốn sổ ở lớp 2, đè lên ảnh nền */
+                
+                padding: 60px 40px; 
+                text-align: center;
+                box-sizing: border-box;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between; 
+                min-height: 85vh; 
+            }
+
+            .content-wrapper {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                justify-content: center; 
+                align-items: center; 
+            }
+
+            h1 {
+                font-family: "Helvetica Now", Arial, sans-serif;
+                font-size: 2.8rem;
+                margin-bottom: 20px;
+            }
+            p {
+                font-size: 1.55rem;
+                line-height: 1.7;
+                margin-bottom: 15px;
+                font-weight: normal;
+                max-width: 800px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .highlight-box {
+                border: 2px solid #2b0c06;
+                padding: 12px 35px; 
+                border-radius: 50px;
+                margin-top: 30px;
+                background-color: #f8f8ee; 
+                width: max-content; 
+                align-self: center; 
+            }
+        </style>
+    </head>
+    
+    <body>
+        <!-- Header chứa Tabs và Social Icons -->
+        <Header />
+        
+        <!-- Cuốn sổ chứa nội dung và Footer -->
+        <main>
+            <div class="content-wrapper">
+                <h1>INSIGHT VIETNAM</h1>
+                
+                <p>
+                    Nơi giúp các doanh nghiệp vừa và nhỏ hiểu về khách hàng của mình, thương hiệu của mình, thị trường của mình và địa điểm mở bán phù hợp với mình.
+                </p>
+                
+                <!-- Box chữ ký -->
+                <div class="highlight-box">
+                    <h2 style="margin: 0; font-size: 1.5rem; font-family: 'Helvetica Now', Arial, sans-serif;">Psychology-Based. Data-Driven</h2>
+                </div>
+            </div>
+            
+            <Footer />
+        </main>
+    </body>
+</html>

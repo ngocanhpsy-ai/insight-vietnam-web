@@ -1,0 +1,526 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+---
+
+<!doctype html>
+<html lang="vi">
+    <head>
+        <BaseHead title={`Chia Sẻ Kiến Thức - ${SITE_TITLE}`} description="Các sự kiện webinar và bài viết chuyên môn từ Insight Vietnam." />
+        
+        <style is:global>
+            html, body {
+                color: #2b0c06;
+                font-family: "Helvetica World", Arial, sans-serif;
+                margin: 0;
+                padding: 0;
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
+                background-color: #27201a;
+            }
+
+            body::before {
+                content: "";
+                position: fixed;
+                top: 0; left: 0; right: 0; bottom: 0;
+                background-image: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)), url('/ws_background_8.jpg');
+                background-size: 120% 120%; 
+                background-position: left center;
+                background-repeat: no-repeat;
+                z-index: 0;
+                animation: panBackground 40s linear infinite alternate; 
+            }
+
+            @keyframes panBackground {
+                0% { background-position: 0% 50%; }
+                100% { background-position: 100% 50%; }
+            }
+        </style>
+        
+        <style>
+            /* CUỐN SỔ TAY 900px */
+            main {
+                flex: 1;
+                width: 100%;
+                max-width: 900px; 
+                margin: 0 auto;
+                background-color: rgba(248, 248, 238, 0.6); 
+                backdrop-filter: blur(8px);
+                box-shadow: 0px -5px 25px rgba(0,0,0,0.4);
+                position: relative;
+                z-index: 2; 
+                display: flex;
+                flex-direction: column;
+                padding: 60px 40px 60px 40px; 
+                box-sizing: border-box;
+                min-height: 85vh;
+            }
+
+            .knowledge-layout {
+                display: grid;
+                grid-template-columns: 320px 1fr; 
+                gap: 40px;
+                align-items: start;
+                margin-top: 10px; 
+            }
+
+            /* ==================================== */
+            /* CỘT TRÁI: SỰ KIỆN & FORM ĐĂNG KÝ     */
+            /* ==================================== */
+            .sidebar-title {
+                font-family: "Helvetica Now", Arial, sans-serif;
+                font-size: 1.3rem;
+                margin-top: 0;
+                margin-bottom: 20px;
+                color: #531c24;
+                text-transform: uppercase;
+            }
+
+            .event-card {
+                border: 1.5px solid rgba(43, 12, 6, 0.2);
+                border-radius: 12px;
+                padding: 15px;
+                display: flex;
+                gap: 15px;
+                align-items: center;
+                margin-bottom: 25px;
+                background-color: rgba(246, 238, 220, 0.5);
+            }
+            .event-date {
+                background-color: #2b0c06;
+                color: #f6eedc;
+                min-width: 65px;
+                height: 65px;
+                border-radius: 8px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                font-weight: bold;
+                line-height: 1;
+            }
+            .event-date span { font-size: 1.6rem; }
+            .event-date small { font-size: 0.8rem; text-transform: uppercase; margin-top: 3px; }
+            .event-info h4 { margin: 0 0 5px 0; font-size: 1rem; line-height: 1.3; }
+            .event-info p { margin: 0; font-size: 0.85rem; opacity: 0.8; }
+
+            .subscribe-box {
+                border-top: 1px dashed rgba(43, 12, 6, 0.3);
+                padding-top: 25px;
+            }
+            .subscribe-box h4 { margin: 0 0 10px 0; font-size: 1.1rem; }
+            .subscribe-box p { font-size: 0.95rem; line-height: 1.5; margin: 0 0 20px 0; opacity: 0.9; }
+            
+            .sub-form { display: flex; flex-direction: column; gap: 15px; }
+            .sub-form input {
+                font-family: inherit;
+                font-size: 1rem;
+                padding: 10px 0;
+                background-color: transparent;
+                border: none;
+                border-bottom: 1px dashed rgba(43, 12, 6, 0.4);
+                color: #2b0c06;
+                transition: border-bottom-color 0.3s ease;
+            }
+            .sub-form input:focus { outline: none; border-bottom: 1.5px solid #2b0c06; }
+            .btn-sub {
+                align-self: flex-start;
+                background-color: #531c24; 
+                color: #f8f8ee;
+                border: none;
+                padding: 10px 25px;
+                font-family: inherit;
+                font-weight: bold;
+                font-size: 1rem;
+                border-radius: 50px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+            .btn-sub:hover { filter: brightness(1.2); transform: translateY(-2px); }
+
+            /* ==================================== */
+            /* CỘT PHẢI: BLOG & NEWSLETTER          */
+            /* ==================================== */
+            .blog-grid {
+                display: flex;
+                flex-direction: column;
+                gap: 25px; 
+            }
+
+            .blog-card {
+                border-radius: 12px;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+                background-color: #f6eedc;
+                overflow: hidden;
+                cursor: pointer;
+                transition: transform 0.2s ease, box-shadow 0.2s ease;
+            }
+            .blog-card:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0,0,0,0.15); }
+
+            .blog-img {
+                width: 100%;
+                height: 160px; 
+                background-image: linear-gradient(to bottom, rgba(43,12,6,0.1), rgba(43,12,6,0.7)), url('/blog1.jpg');
+                background-size: cover;
+                background-position: center;
+                position: relative;
+                transition: height 0.3s ease;
+            }
+            
+            .blog-tag {
+                position: absolute;
+                bottom: 15px; left: 20px;
+                background-color: #f6eedc;
+                color: #2b0c06;
+                padding: 4px 12px;
+                border-radius: 20px;
+                font-size: 0.75rem;
+                font-weight: bold;
+                text-transform: uppercase;
+            }
+
+            .blog-content { padding: 25px; }
+            .blog-title {
+                font-family: "Helvetica Now", Arial, sans-serif;
+                font-size: 1.4rem;
+                margin: 0 0 15px 0;
+                line-height: 1.3;
+                color: #2b0c06;
+            }
+            .blog-excerpt {
+                font-size: 0.95rem;
+                line-height: 1.6;
+                margin: 0;
+                opacity: 0.85;
+            }
+
+            .read-more-hint {
+                display: inline-block;
+                margin-top: 15px;
+                font-size: 0.9rem;
+                font-weight: bold;
+                color: #531c24;
+                border-bottom: 1px dashed currentColor;
+            }
+
+            .blog-full-text {
+                display: none;
+                margin-top: 20px;
+                font-size: 1rem;
+                line-height: 1.7;
+                border-top: 1px solid rgba(43, 12, 6, 0.1);
+                padding-top: 20px;
+            }
+            
+            .blog-full-text h5 { font-size: 1.15rem; margin: 25px 0 10px 0; color: #531c24; }
+            .blog-full-text p { margin-bottom: 15px; }
+            .blog-full-text ul { padding-left: 20px; margin-bottom: 15px; }
+            .blog-full-text li { margin-bottom: 8px; }
+            .blog-full-text .references {
+                margin-top: 40px;
+                font-size: 0.8rem;
+                opacity: 0.7;
+                border-top: 1px dashed currentColor;
+                padding-top: 15px;
+            }
+
+            .blog-card.is-open { cursor: default; transform: none; box-shadow: 0 8px 25px rgba(0,0,0,0.15); }
+            .blog-card.is-open .blog-img { height: 200px; } 
+            .blog-card.is-open .blog-excerpt, .blog-card.is-open .read-more-hint { display: none; }
+            .blog-card.is-open .blog-full-text { display: block; animation: fadeIn 0.4s ease forwards; }
+
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(10px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+
+            .close-blog-btn {
+                display: none;
+                margin-top: 30px;
+                background-color: transparent;
+                border: 1.5px solid #2b0c06;
+                padding: 8px 25px;
+                border-radius: 50px;
+                font-weight: bold;
+                cursor: pointer;
+                transition: all 0.2s;
+            }
+            .blog-card.is-open .close-blog-btn { display: inline-block; }
+            .close-blog-btn:hover { background-color: #2b0c06; color: #f6eedc; }
+
+            /* ==================================== */
+            /* POPUP THÔNG BÁO                      */
+            /* ==================================== */
+            .popup-overlay {
+                position: fixed;
+                top: 0; left: 0; width: 100%; height: 100%;
+                background-color: rgba(0,0,0,0.6);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 9999;
+                visibility: hidden;
+                opacity: 0;
+                transition: opacity 0.3s ease;
+            }
+            .popup-overlay.show {
+                visibility: visible;
+                opacity: 1;
+            }
+            
+            .popup-content {
+                background-color: #f6eedc;
+                padding: 40px;
+                border-radius: 12px;
+                text-align: center;
+                box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+                max-width: 420px;
+                width: 90%;
+                border: 2px solid #2b0c06;
+            }
+
+            .popup-content p {
+                font-size: 1.2rem;
+                line-height: 1.6;
+                margin-top: 0;
+                margin-bottom: 25px;
+                font-weight: bold;
+                color: #2b0c06;
+            }
+
+            .btn-close-popup {
+                background-color: transparent;
+                color: #2b0c06;
+                border: 2px solid #2b0c06;
+                padding: 10px 30px;
+                font-family: inherit;
+                font-weight: bold;
+                font-size: 1rem;
+                border-radius: 50px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+            .btn-close-popup:hover {
+                background-color: #2b0c06;
+                color: #f8f8ee;
+            }
+
+            @media (max-width: 768px) {
+                .knowledge-layout { grid-template-columns: 1fr; }
+                .sidebar-title { margin-top: 30px; }
+                .knowledge-layout { display: flex; flex-direction: column-reverse; }
+            }
+        </style>
+    </head>
+    
+    <body>
+        <Header />
+        
+        <main>
+            <div class="knowledge-layout">
+                
+                <!-- CỘT TRÁI: SỰ KIỆN & TÀI LIỆU -->
+                <aside class="sidebar">
+                    <h2 class="sidebar-title">Webinar & Sự Kiện</h2>
+                    
+                    <div class="event-card">
+                        <div class="event-date"><span>24</span><small>Th10</small></div>
+                        <div class="event-info">
+                            <h4>Giải mã hành vi tiêu dùng B2C</h4>
+                            <p>Trực tuyến qua Zoom</p>
+                        </div>
+                    </div>
+
+                    <div class="subscribe-box">
+                        <h4>Nhận link tham gia miễn phí</h4>
+                        <p>Để lại email để nhận thông tin và link truy cập các buổi webinar cộng đồng thường kỳ.</p>
+                        <form id="subscribeForm" class="sub-form">
+                            <!-- BẠN DÁN ACCESS KEY VÀO ĐÂY NHÉ -->
+                            <input type="hidden" name="access_key" value="cf04d156-00be-4047-ba1f-c60073644ea0">
+                            
+                            <input type="hidden" name="subject" value="[ĐĂNG KÝ WEBINAR] Có người mới đăng ký nhận link từ website">
+                            <input type="hidden" name="from_name" value="Insight Webinar">
+                        
+                            <input type="email" name="email" placeholder="Nhập địa chỉ email..." required>
+                            <button type="submit" class="btn-sub">Đăng ký ngay</button>
+                        </form>
+                    </div>
+                </aside>
+
+                <!-- CỘT PHẢI: BLOG GRID -->
+                <div class="blog-grid" id="blogGrid">
+                    
+                    <div class="blog-card">
+                        <div class="blog-img">
+                            <span class="blog-tag">Tâm Lý Học Hành Vi</span>
+                        </div>
+                        
+                        <div class="blog-content">
+                            <h3 class="blog-title">Kế toán tâm lý: Khi 1 + 1 không bằng 2</h3>
+                            
+                            <p class="blog-excerpt">
+                                Chúng ta luôn có một ảo tưởng rất đẹp về con người: Giả định rằng chúng ta là những hạt nhân lý trí: biết mình muốn gì, biết thị trường có gì, và luôn cân đo chính xác giữa nhu cầu, giá cả để đưa ra lựa chọn tối ưu nhất...
+                            </p>
+                            <span class="read-more-hint">Nhấp để đọc tiếp &rarr;</span>
+
+                            <div class="blog-full-text">
+                                <p>Chúng ta luôn có một ảo tưởng rất đẹp về con người: Giả định rằng chúng ta là những hạt nhân lý trí: biết mình muốn gì, biết thị trường có gì, và luôn cân đo chính xác giữa nhu cầu, giá cả để đưa ra lựa chọn tối ưu nhất.</p>
+                                <p><strong>Nhưng có thật là như vậy không?</strong></p>
+                                <p>Năm 2002, nhà tâm lý học Daniel Kahneman, đã nhận giải Nobel Kinh tế khi chứng minh một sự thật: Con người không tính toán tiền bạc bằng toán học thuần túy. Họ tính bằng CẢM XÚC. Giáo sư Richard Thaler sau này gọi đó là Mental Accounting (Kế toán Tâm lý).</p>
+                                <p>Có một sự thật khá thú vị (và cũng là một nghịch lý): Bạn có thể tối ưu hóa doanh thu mà không cần thay đổi giá bán, chỉ bằng một năng lực duy nhất: hiểu cách khách hàng ‘ghi sổ’ lợi ích và tổn thất đối với bạn.</p>
+
+                                <h5>Trận chiến nhận thức: Cái được và Cái mất</h5>
+                                <p>Con người rất phức tạp nhưng luôn chia sẻ một đặc tính nguyên thủy: <strong>nỗi sợ mất mát (loss aversion)</strong>. Họ sẽ né tránh sự mất mát bằng mọi giá. Cùng một giá trị, đối với họ cái được bao giờ cũng nhỏ hơn cái mất, và họ muốn cái được phải chắc chắn, trong khi với cái mất, họ có thể mạo hiểm.</p>
+                                <p>Để né tránh tổn thương này, Kế toán Tâm lý chỉ ra 4 cơ chế tự vận hành của bộ não:</p>
+                                <ul>
+                                    <li><strong>Tách biệt cái được:</strong> Khách hàng thích được tặng 2 món quà ở 2 thời điểm khác nhau hơn là 1 món quà cùng giá trị chỉ trong 1 lần duy nhất.</li>
+                                    <li><strong>Cộng gộp cái mất:</strong> Khách hàng thà trả một khoản tiền lớn một lần duy nhất hơn là bị thu nhiều khoản phí nhỏ lắt nhắt.</li>
+                                    <li><strong>Cộng gộp cái mất nhỏ vào cái được lớn:</strong> Một khoản chi phí nhỏ sẽ biến mất nếu nó được bao bọc bởi một lợi ích lớn.</li>
+                                    <li><strong>Tách biệt cái mất lớn và cái được nhỏ:</strong> Khi phải bỏ ra một khoản tiền lớn, một món quà đi kèm dù rất nhỏ cũng cần được gọi tên thật rõ ràng để xoa dịu nỗi đau chi tiêu.</li>
+                                </ul>
+
+                                <h5>Ứng dụng Kế toán Tâm lý vào Chiến lược Doanh thu của bạn</h5>
+                                <p><strong>A. Bài toán đóng gói sản phẩm: Hãy để khách hàng "được vui nhiều lần" và "chỉ một lần đau"</strong><br>
+                                Giả sử bạn bán quà tặng túi xách nữ cao cấp trị giá 1,6 triệu đồng cho dịp 8/3. Bạn có hai cách thiết kế trải nghiệm:</p>
+                                <ul>
+                                    <li><strong>Cách 1:</strong> Bán một món duy nhất trị giá 1,6 triệu, hoặc để khách tự chọn 4 món lẻ rồi cộng tiền.</li>
+                                    <li><strong>Cách 2:</strong> Đóng gói thành một hộp combo "4-in-1" chỉn chu, thể hiện rõ được sự phân tách đa dạng trong combo.</li>
+                                </ul>
+                                <p>Khả năng cao Cách 2 sẽ thắng, vì nó thỏa mãn đồng thời hai bộ lọc: <em>Tách biệt cái được</em> (nhìn thấy 4 món đồ khác nhau kích hoạt cảm giác "được vui nhiều lần") và <em>Cộng gộp cái mất</em> (Chi tiền một lần duy nhất cho cả combo luôn dễ chịu hơn. "Thà một lần đau" về mặt chi phí luôn mang lại trải nghiệm tốt hơn).</p>
+
+                                <p><strong>B. Bài toán cấu trúc giá: Nghệ thuật làm mờ chi phí và phóng đại giá trị</strong><br>
+                                Cách bạn sắp xếp các con số sẽ quyết định việc kích hoạt lý trí hay cảm xúc của người mua.</p>
+                                <ul>
+                                    <li><strong>Gộp cái mất nhỏ vào cái được lớn:</strong> Bạn có thấy "Giảm ngay 500k, chưa bao gồm phí giao hàng 50k" thường kém hấp dẫn hơn “Tiết kiệm ngay 450k, miễn phí giao hàng”, dù về mặt toán học, hai lựa chọn là như nhau?</li>
+                                    <li><strong>Tách biệt cái mất lớn và cái được nhỏ:</strong> Khi khách phải trả một khoản lớn, mọi phần thưởng nhỏ cần được làm cho thật rõ. Ví dụ như “Trọn gói 20 triệu” sẽ không khiến khách xuống tiền dễ bằng “Gói 20 triệu + tặng kèm 1 buổi đồng hành riêng + thiết kế checklist cá nhân hóa.”</li>
+                                </ul>
+
+                                <h5>Cú twist cho chính bạn</h5>
+                                <p>Là người điều hành, bạn có nhận ra chính mình cũng đôi khi bị mắc kẹt trong chiếc bẫy Kế toán Tâm lý này?<br>
+                                Khi bạn dốc quá nhiều ngân sách vào một dự án hay một kênh phân phối đang gãy, bạn thường có xu hướng đổ thêm tiền vào với hy vọng "gỡ gạc". Tâm lý học hành vi gọi đây là <strong>Hiệu ứng chi phí chìm (Sunk Cost Fallacy)</strong>. Khách hàng của bạn phi lý trí, và đôi khi, chính chúng ta cũng vậy.</p>
+
+                                <h5>Lời kết</h5>
+                                <p>Thay vì mong đợi một hành vi logic từ thị trường, như giảm giá sâu thì khách sẽ mua, đôi khi cách tốt hơn là thiết kế một cấu trúc giá phù hợp với cách bộ não họ vận hành. Suy cho cùng, câu hỏi cốt lõi của chiến lược tăng trưởng đôi khi không phải là: <em>“Với mức giá này thì có bao nhiêu người mua?”</em> Mà phải là: <em>“Khách hàng đang cảm thấy họ được bao nhiêu, và mất thế nào với những gì bạn cung cấp?”</em></p>
+
+                                <hr style="margin: 30px 0; border: none; border-top: 1px dashed rgba(43, 12, 6, 0.3);">
+                                
+                                <p style="font-size: 0.95rem; font-style: italic; line-height: 1.6;">
+                                    Với nền tảng khoa học chuyên sâu về hành vi khách hàng và phân tích dữ liệu, Insight Vietnam giúp các doanh nghiệp vừa và nhỏ hiểu về khách hàng của mình, thương hiệu của mình, thị trường của mình và địa điểm mở bán phù hợp với mình.<br><br>
+                                    <strong>Để được tư vấn trực tiếp, vui lòng liên hệ: </strong>
+                                    <a href="mailto:anh.nguyen@insightlabvietnam.com" style="color: #531c24; text-decoration: underline; font-weight: bold;">anh.nguyen@insightlabvietnam.com</a><br>
+                                    <strong>Anh Nguyen, Ph.D. Psychology-Based. Data-Driven.</strong>
+                                </p>            
+
+                                <div class="references">
+                                    <strong>Nguồn tham khảo:</strong><br>
+                                    - Arkes, H, & Blumer, C. (1985). The psychology of sunk cost.<br>
+                                    - Kahneman, D, & Tversky, A. (1984). Choices, values, and frames.<br>
+                                    - Thaler, R. (1999). Mental accounting matters. Journal of Behavioral Decision Making.
+                                </div>
+                                
+                                <button class="close-blog-btn">Thu gọn bài viết</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            
+            <div style="flex: 1;"></div>
+            <Footer />
+        </main>
+
+        <!-- POPUP THÔNG BÁO -->
+        <div id="successPopup" class="popup-overlay">
+            <div class="popup-content">
+                <p>Cám ơn bạn đã đăng ký!<br>Thông tin sẽ được gửi qua email trong thời gian tới.</p>
+                <button id="closePopup" class="btn-close-popup">Đóng</button>
+            </div>
+        </div>
+
+        <!-- SCRIPT ĐIỀU KHIỂN ĐÓNG MỞ BLOG & GỬI FORM EMAIL -->
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                // 1. CHỨC NĂNG ĐÓNG MỞ BÀI BLOG
+                const blogCards = document.querySelectorAll('.blog-card');
+
+                blogCards.forEach(card => {
+                    card.addEventListener('click', (e) => {
+                        if (e.target.classList.contains('close-blog-btn')) {
+                            e.stopPropagation();
+                            card.classList.remove('is-open');
+                            card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                            return;
+                        }
+                        if (!card.classList.contains('is-open')) {
+                            card.classList.add('is-open');
+                        }
+                    });
+                });
+
+                // 2. CHỨC NĂNG GỬI FORM ĐĂNG KÝ WEBINAR QUA WEB3FORMS & BẬT POPUP
+                const subForm = document.getElementById('subscribeForm');
+                const popup = document.getElementById('successPopup');
+                const closeBtn = document.getElementById('closePopup');
+
+                if (subForm) {
+                    const subBtn = subForm.querySelector('.btn-sub');
+
+                    subForm.addEventListener('submit', async (e) => {
+                        e.preventDefault(); 
+                        
+                        const formData = new FormData(subForm);
+                        const object = Object.fromEntries(formData);
+                        const json = JSON.stringify(object);
+
+                        const originalText = subBtn.innerText;
+                        subBtn.innerText = 'Đang gửi...';
+                        subBtn.disabled = true;
+
+                        try {
+                            const response = await fetch('https://api.web3forms.com/submit', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'Accept': 'application/json'
+                                },
+                                body: json
+                            });
+                            
+                            if (response.status === 200) {
+                                // HIỂN THỊ POPUP
+                                popup.classList.add('show');
+                                subForm.reset();
+                            } else {
+                                alert('Xin lỗi, có lỗi xảy ra. Vui lòng thử lại sau.');
+                            }
+                        } catch (error) {
+                            alert('Xin lỗi, đã mất kết nối. Vui lòng thử lại sau.');
+                        } finally {
+                            subBtn.innerText = originalText;
+                            subBtn.disabled = false;
+                        }
+                    });
+                }
+
+                // XỬ LÝ ĐÓNG POPUP
+                if (closeBtn) {
+                    closeBtn.addEventListener('click', () => {
+                        popup.classList.remove('show');
+                    });
+                }
+
+                if (popup) {
+                    popup.addEventListener('click', (e) => {
+                        if (e.target === popup) {
+                            popup.classList.remove('show');
+                        }
+                    });
+                }
+            });
+        </script>
+    </body>
+</html>

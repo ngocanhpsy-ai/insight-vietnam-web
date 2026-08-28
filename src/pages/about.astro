@@ -1,0 +1,292 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import ChatWidget from '../components/ChatWidget.astro';
+import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+---
+
+<!doctype html>
+<html lang="vi">
+    <head>
+        <BaseHead title={`Về Tôi - ${SITE_TITLE}`} description="Giới thiệu về Nguyễn Ngọc Anh và Insight Vietnam" />
+        
+        <!-- BẮT BUỘC: GIỮ NGUYÊN NỀN ĐỂ ĐỒNG BỘ VỚI TRANG CHỦ -->
+        <style is:global>
+            html, body {
+                color: #2b0c06;
+                font-family: "Helvetica World", Arial, sans-serif;
+                margin: 0;
+                padding: 0;
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
+                background-color: #27201a;
+            }
+
+            body::before {
+                content: "";
+                position: fixed;
+                top: 0; left: 0; right: 0; bottom: 0;
+                background-image: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)), url('/ws_background_8.jpg');
+                background-size: 120% 120%; 
+                background-position: left center;
+                background-repeat: no-repeat;
+                z-index: 0;
+                animation: panBackground 40s linear infinite alternate; 
+            }
+
+            @keyframes panBackground {
+                0% { background-position: 0% 50%; }
+                100% { background-position: 100% 50%; }
+            }
+        </style>
+        
+        <style>
+            /* CUỐN SỔ BÊN TRONG */
+            main {
+                flex: 1;
+                width: 100%;
+                max-width: 900px; 
+                margin: 0 auto;
+                background-color: rgba(248, 248, 238, 0.6); 
+                backdrop-filter: blur(8px);
+                border-radius: 0; 
+                box-shadow: 0px -5px 25px rgba(0,0,0,0.4);
+                position: relative;
+                z-index: 2; 
+                
+                /* Tinh chỉnh lại padding cho trang About */
+                padding: 40px 50px 20px 50px; 
+                box-sizing: border-box;
+                display: flex;
+                flex-direction: column;
+                min-height: 85vh; 
+            }
+
+            /* PHẦN TRÊN: ẢNH VÀ GIỚI THIỆU */
+            .about-top {
+                display: flex;
+                gap: 40px;
+                align-items: flex-start;
+                margin-bottom: 40px;
+                border-bottom: 1px solid rgba(43, 12, 6, 0.2);
+                padding-bottom: 30px;
+            }
+            .profile-img-container {
+                flex: 0 0 220px;
+            }
+            .profile-img {
+                width: 100%;
+                aspect-ratio: 1 / 1;
+                object-fit: cover;
+                border-radius: 12px;
+                border: 2px solid #2b0c06;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            }
+            .bio-text {
+                flex: 1;
+                text-align: left;
+            }
+            .bio-text h1 {
+                font-family: "Helvetica Now", Arial, sans-serif;
+                font-size: 2.2rem;
+                margin: 0 0 15px 0;
+            }
+            .bio-text p {
+                font-size: 1.1rem;
+                line-height: 1.7;
+                margin-bottom: 10px;
+            }
+
+            .scholar-link {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                margin-top: 10px;
+                font-size: 1.05rem;
+                font-weight: bold;
+                color: #531c24; 
+                text-decoration: none;
+                border-bottom: 1px solid transparent;
+                transition: all 0.2s ease;
+            }
+            .scholar-link:hover {
+                color: #2b0c06; 
+                border-bottom: 1px solid #2b0c06;
+                transform: translateX(4px);
+            }
+
+            /* PHẦN DƯỚI: MENU VÀ NỘI DUNG TƯƠNG TÁC */
+            .about-bottom {
+                display: flex;
+                gap: 40px;
+                flex: 1;
+            }
+            .tabs-menu {
+                flex: 0 0 220px; 
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+            }
+            .menu-btn {
+                background-color: transparent;
+                border: 2px solid #2b0c06;
+                color: #2b0c06;
+                padding: 12px 20px;
+                text-align: left;
+                font-family: inherit;
+                font-weight: bold;
+                font-size: 1.05rem;
+                border-radius: 8px;
+                cursor: pointer;
+                transition: all 0.2s ease;
+            }
+            .menu-btn.active, .menu-btn:hover {
+                background-color: #2b0c06;
+                color: #f8f8ee;
+                transform: translateX(5px);
+            }
+            
+            .tabs-content-area {
+                flex: 1;
+                background-color: transparent; 
+                padding: 0;
+                border: none;
+                display: grid;
+            }
+
+            .tab-panel {
+                grid-area: 1 / 1; 
+                visibility: hidden;
+                opacity: 0;
+                
+                /* HIỆU ỨNG LẬT TRANG SÁCH */
+                transform-origin: left center;
+                transform: perspective(1200px) rotateY(35deg) translateX(30px);
+                transition: all 0.7s cubic-bezier(0.25, 1, 0.5, 1);
+                
+                background-color: #f4ebd8; 
+                border: 1px solid rgba(43, 12, 6, 0.2);
+                border-radius: 4px 12px 12px 4px;
+                padding: 30px 40px;
+                box-shadow: 2px 5px 15px rgba(0,0,0,0.1);
+                text-align: left;
+            }
+
+            .tab-panel.active {
+                visibility: visible;
+                opacity: 1;
+                transform: perspective(1200px) rotateY(0deg) translateX(0); 
+                z-index: 2;
+            }
+
+            .tab-panel h3 {
+                margin-top: 0;
+                font-family: "Helvetica Now", Arial, sans-serif;
+                font-size: 1.5rem;
+                color: #2b0c06;
+                border-bottom: 2px solid #2b0c06;
+                display: inline-block;
+                padding-bottom: 5px;
+                margin-bottom: 15px;
+            }
+            .tab-panel p {
+                font-size: 1.05rem;
+                line-height: 1.6;
+            }
+        </style>
+    </head>
+    
+    <body>
+        <Header />
+        
+        <main>
+            <!-- KHU VỰC TRÊN: ẢNH VÀ BIO -->
+            <div class="about-top">
+                <div class="profile-img-container">
+                    <img src="/avatar.jpg" alt="Nguyễn Ngọc Anh" class="profile-img" />
+                </div>
+                
+                <div class="bio-text">
+                    <h1>TS. Nguyễn Ngọc Anh</h1>
+                    <p>Founder & Lead Consultant</p>
+                    <p>Với nền tảng đào tạo Thạc sĩ tại Hà Lan, Tiến sĩ tại Đức cùng 8+ năm kinh nghiệm nghiên cứu và phân tích hành vi trong bối cảnh kinh doanh tại châu Âu, công việc của tôi là biến những quan sát hành vi và dữ liệu phức tạp thành quyết định tăng trưởng với mức độ chắc chắn cao hơn, rõ ràng và dựa trên bằng chứng.</p>
+                    
+                    <!-- Dòng Hyperlink kèm Icon -->
+                    <a href="https://scholar.google.com/citations?user=65P0Uy4AAAAJ&hl=en&fbclid=IwY2xjawT6UqtwZG9mBWV4dG4DYWVtAjEwAGJyaWQRMWgwZ2wyQ1A3cTc4TFhvcm9zcnRjBmFwcF9pZBAyMjIwMzkxNzg4MjAwODkyAAEeukTkFo5CkrsbzAooNvBrNYjQ0tyXd0D3PZGWalenMAquQ3oxMYAe8heLR1I_aem_FIvKJvmsSxBiEjepBCffqA" target="_blank" rel="noopener noreferrer" class="scholar-link">
+                        Xem các dự án nghiên cứu quốc tế tại đây
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                            <polyline points="15 3 21 3 21 9"></polyline>
+                            <line x1="10" y1="14" x2="21" y2="3"></line>
+                        </svg>
+                    </a>
+                </div>
+            </div> <!-- Đã bổ sung thẻ đóng div bị thiếu ở đây -->
+
+            <!-- KHU VỰC DƯỚI: NÚT TƯƠNG TÁC -->
+            <div class="about-bottom">
+                <div class="tabs-menu">
+                    <button class="menu-btn" data-target="panel-tu-van">Tư vấn</button>
+                    <button class="menu-btn" data-target="panel-dao-tao">Đào tạo</button>
+                    <button class="menu-btn" data-target="panel-nghien-cuu">Nghiên cứu</button>
+                </div>
+                
+                <div class="tabs-content-area">
+                    <!-- Nội dung: Tư vấn -->
+                    <div id="panel-tu-van" class="tab-panel">
+                        <h3>Tư vấn Chiến lược</h3>
+                        <p>Giúp founders và ban lãnh đạo thấu hiểu chân dung và động cơ tiêu dùng của khách hàng, gia tăng tỷ lệ chuyển đổi, nâng cao lợi thế cạnh tranh và lựa chọn địa điểm mở bán phù hợp nhất.</p>
+                        <p>Dựa trên kiến thức tâm lý học, dữ liệu thị trường, cùng kỹ thuật đo lường và phân tích dữ liệu nâng cao.</p>
+                    </div>
+                    
+                    <!-- Nội dung: Đào tạo -->
+                    <div id="panel-dao-tao" class="tab-panel">
+                        <h3>Đào tạo Chuyên sâu</h3>
+                        <p>Hướng dẫn 1-1 cho các founders và nhà quản lý cách thu thập, đọc hiểu, phân tích dữ liệu và áp dụng kiến thức tâm lý để giải quyết vấn đề về khách hàng, tăng trưởng và quản trị nhân sự.</p>
+                        <p>3+ năm kinh nghiệm giảng dạy phương pháp nghiên cứu và phân tích dữ liệu, tâm lý học và quản trị kinh doanh tại châu Âu và Việt Nam.</p>
+                        <p>Các khóa học đã thực hiện: Phương pháp nghiên cứu và phân tích dữ liệu nâng cao, Hành vi trong tổ chức, Phát triển lãnh đạo và quản lý, Quản trị sự nghiệp và Công việc trong tương lai.</p>
+                    </div>
+                    
+                    <!-- Nội dung: Nghiên cứu -->
+                    <div id="panel-nghien-cuu" class="tab-panel">
+                        <h3>Nghiên cứu Hành vi & Phân tích Dữ liệu</h3>
+                        <p>8+ năm nghiên cứu cho dự án quản trị quốc tế thuộc Ủy Ban Châu Âu (European Commission) và đại học Bamberg, Đức.</p>
+                        <p>Chuyên về các phương pháp phân tích dữ liệu tiên tiến: đo lường, phân khúc và phân loại dữ liệu, xử lý dữ liệu đa tầng, các mô hình máy học và ứng dụng AI/ tự động hóa.</p>
+                        <p>Các giải thưởng và quỹ tài trợ: Nghiên cứu xuất sắc (Học viện Quản trị Hoa Kỳ AOM 2021, Học viện Quản trị Châu Âu EURAM 2023), Quỹ tài trợ (Marie Skłodowska-Curie Actions thuộc liên minh Châu Âu 2018-2024, Di chuyển nghiên cứu quốc tế bang Bavaria, Đức 2025).</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="flex: 1;"></div>
+            <Footer />
+        </main>
+
+        <ChatWidget />
+
+        <!-- JAVASCRIPT XỬ LÝ NÚT BẤM & CUỘN ĐÓNG -->
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const btns = document.querySelectorAll('.menu-btn');
+                
+                btns.forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const targetId = btn.getAttribute('data-target');
+                        const targetPanel = document.getElementById(targetId);
+                        
+                        const isCurrentlyActive = btn.classList.contains('active');
+                        
+                        document.querySelectorAll('.menu-btn').forEach(b => b.classList.remove('active'));
+                        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+                        
+                        if (!isCurrentlyActive) {
+                            btn.classList.add('active');
+                            targetPanel.classList.add('active');
+                        }
+                    });
+                });
+            });
+        </script>
+    </body>
+</html>

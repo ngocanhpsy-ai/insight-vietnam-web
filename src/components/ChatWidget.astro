@@ -1,0 +1,175 @@
+---
+// src/components/ChatWidget.astro
+---
+
+<div id="insight-chat-widget">
+    <!-- Nút bong bóng nổi ở góc phải -->
+    <button id="chat-toggle-btn" class="chat-btn" aria-label="Mở khung chat">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="#f8f8ee"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+    </button>
+
+    <!-- Khung Chat (Mặc định ẩn) -->
+    <div id="chat-window" class="chat-window hidden">
+        <div class="chat-header">
+            <h4 style="margin: 0; font-family: 'Helvetica Now', Arial, sans-serif;">Chat với Insight Vietnam</h4>
+            <button id="chat-close-btn" class="close-btn">&times;</button>
+        </div>
+        
+        <!-- Phần nhập nội dung -->
+        <div id="chat-body" class="chat-body">
+            <p class="chat-greeting">Xin chào! Bạn hãy để lại câu hỏi và thông tin, chúng tôi sẽ liên hệ lại sớm nhất nhé.</p>
+            
+            <form id="chat-form">
+                <input type="email" id="chat-email" class="chat-input" placeholder="Email của bạn..." required />
+                <textarea id="chat-message" class="chat-input" rows="3" placeholder="Để lại câu hỏi của bạn ở đây..." required></textarea>
+                <button type="submit" class="chat-submit">Gửi tin nhắn</button>
+            </form>
+        </div>
+
+        <!-- Màn hình cảm ơn -->
+        <div id="chat-success" class="chat-success hidden">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="#2b0c06" style="margin-bottom: 10px;"><path d="M12 0a12 12 0 100 24 12 12 0 000-24zm-1 17l-5-5 1.4-1.4 3.6 3.6 7.6-7.6L19 8l-9 9z"/></svg>
+            <p style="margin: 0; font-weight: bold;">Cám ơn bạn!</p>
+            <p style="margin: 5px 0 0 0; font-size: 0.95rem;">Chúng tôi đã nhận được tin nhắn và sẽ liên hệ lại sớm nhất.</p>
+        </div>
+    </div>
+</div>
+
+<style>
+    #insight-chat-widget {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        z-index: 9999; 
+        font-family: "Helvetica World", Arial, sans-serif;
+    }
+
+    .chat-btn {
+        background-color: #2b0c06;
+        border: none;
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        transition: transform 0.2s;
+    }
+    .chat-btn:hover {
+        transform: scale(1.05);
+    }
+
+    .chat-window {
+        position: absolute;
+        bottom: 80px;
+        right: 0;
+        width: 320px;
+        background-color: #f8f8ee; 
+        border-radius: 12px;
+        box-shadow: 0 5px 25px rgba(0,0,0,0.2);
+        border: 2px solid #2b0c06;
+        overflow: hidden;
+        transition: opacity 0.3s, transform 0.3s;
+        transform-origin: bottom right;
+    }
+    .chat-window.hidden {
+        opacity: 0;
+        transform: scale(0);
+        pointer-events: none;
+    }
+
+    .chat-header {
+        background-color: #2b0c06;
+        color: #f8f8ee;
+        padding: 15px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .close-btn {
+        background: none;
+        border: none;
+        color: #f8f8ee;
+        font-size: 1.5rem;
+        cursor: pointer;
+        line-height: 1;
+    }
+
+    .chat-body, .chat-success {
+        padding: 20px;
+        color: #2b0c06;
+    }
+
+    .chat-greeting {
+        font-size: 0.95rem;
+        margin-top: 0;
+        margin-bottom: 15px;
+        line-height: 1.5;
+    }
+
+    .chat-input {
+        width: 100%;
+        box-sizing: border-box;
+        border: 1px solid rgba(43, 12, 6, 0.3);
+        background-color: white;
+        padding: 10px;
+        margin-bottom: 12px;
+        border-radius: 6px;
+        font-family: inherit;
+        color: #2b0c06;
+    }
+    .chat-input:focus {
+        outline: none;
+        border-color: #2b0c06;
+    }
+
+    .chat-submit {
+        width: 100%;
+        background-color: #2b0c06;
+        color: #f8f8ee;
+        border: none;
+        padding: 12px;
+        border-radius: 6px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+    .chat-submit:hover {
+        background-color: #4a1f14;
+    }
+
+    .chat-success {
+        text-align: center;
+        padding: 40px 20px;
+    }
+    .chat-success.hidden {
+        display: none;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const toggleBtn = document.getElementById('chat-toggle-btn');
+        const closeBtn = document.getElementById('chat-close-btn');
+        const chatWindow = document.getElementById('chat-window');
+        const chatForm = document.getElementById('chat-form');
+        const chatBody = document.getElementById('chat-body');
+        const chatSuccess = document.getElementById('chat-success');
+
+        toggleBtn.addEventListener('click', () => {
+            chatWindow.classList.toggle('hidden');
+        });
+        closeBtn.addEventListener('click', () => {
+            chatWindow.classList.add('hidden');
+        });
+
+        chatForm.addEventListener('submit', (e) => {
+            e.preventDefault(); 
+            chatBody.style.display = 'none';
+            chatSuccess.classList.remove('hidden');
+        });
+    });
+</script>
