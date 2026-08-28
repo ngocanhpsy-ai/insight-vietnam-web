@@ -40,6 +40,64 @@ import ChatWidget from '../components/ChatWidget.astro';
                 0% { background-position: 0% 50%; }
                 100% { background-position: 100% 50%; }
             }
+            /* Các đoạn CSS cũ của bạn có sẵn ở đây... */
+            .title { color: red; }
+        
+            /* Điều chỉnh giao diện tab About cho màn hình di động */
+            @media only screen and (max-width: 600px) {
+            
+            /* Container chính chứa ảnh và nội dung văn bản */
+            .profile-card { /* Giả sử lớp này chứa toàn bộ phần giới thiệu */
+                display: flex;
+                flex-direction: column; /* Chuyển bố cục từ ngang sang dọc */
+                align-items: center; /* Căn giữa các phần tử theo chiều ngang */
+                padding: 20px; /* Thêm khoảng cách đệm */
+            }
+
+            /* Container cho ảnh và tên */
+            .profile-header { /* Giả sử lớp này chứa ảnh và tên, chức danh */
+                display: flex;
+                flex-direction: column; /* Chuyển bố cục từ ngang sang dọc */
+                align-items: center; /* Căn giữa ảnh và tên */
+                text-align: center; /* Căn giữa văn bản */
+                width: 100%; /* Đảm bảo chiếm toàn bộ chiều ngang */
+                margin-bottom: 20px; /* Thêm khoảng cách với phần mô tả bên dưới */
+            }
+
+            /* Ảnh chân dung */
+            .profile-photo { /* Lớp cho thẻ <img /> */
+                width: 150px; /* Giảm kích thước ảnh một chút để phù hợp với màn hình dọc */
+                height: 150px;
+                margin-right: 0; /* Xóa khoảng cách lề phải, thay bằng khoảng cách dưới */
+                margin-bottom: 15px;
+            }
+
+            /* Tên "TS. Nguyễn Ngọc Anh" và các chức danh */
+            .profile-title { /* Lớp cho thẻ <h2> chứa tên */
+                font-size: 1.5rem; /* Điều chỉnh kích thước chữ */
+                line-height: 1.2;
+            }
+
+            .profile-title .name-line { /* Lớp cho phần tên nếu bạn dùng HTML ở trên */
+                display: block; /* Buộc phần tên xuống dòng */
+                margin-top: 5px;
+            }
+
+            /* Đoạn văn bản mô tả */
+            .profile-description { /* Lớp chứa toàn bộ đoạn mô tả */
+                text-align: left; /* Căn trái văn bản cho dễ đọc (hoặc center nếu bạn thích) */
+                width: 100%; /* Chiếm toàn bộ chiều ngang màn hình */
+                margin-left: 0; /* Xóa khoảng cách lề trái */
+                padding: 0 10px; /* Thêm padding nhẹ */
+            }
+
+            /* Nút Chia sẻ kiến thức và các icon mạng xã hội */
+            .social-icons-row { /* Lớp chứa các icon */
+                justify-content: center; /* Căn giữa các icon */
+                margin-top: 15px;
+            }
+            }
+
         </style>
         
         <style>
