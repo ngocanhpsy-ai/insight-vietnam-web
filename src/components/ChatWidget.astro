@@ -159,6 +159,7 @@
         const chatBody = document.getElementById('chat-body');
         const chatSuccess = document.getElementById('chat-success');
 
+        // Bật/tắt khung chat
         toggleBtn.addEventListener('click', () => {
             chatWindow.classList.toggle('hidden');
         });
@@ -166,10 +167,56 @@
             chatWindow.classList.add('hidden');
         });
 
-        chatForm.addEventListener('submit', (e) => {
-            e.preventDefault(); 
-            chatBody.style.display = 'none';
-            chatSuccess.classList.remove('hidden');
+        // Xử lý khi bấm nút Gửi
+        chatForm.addEventListener('submit', async (e) => {
+            e.preventDefault(); // Chặn việc tải lại trang
+            
+            // Lấy dữ liệu người dùng gõ vào
+            const emailValue = document.getElementById('chat-email').value;
+            const messageValue = document.getElementById('chat-message').value;
+            const submitBtn = chatForm.querySelector('.chat-submit');
+            
+            // Đổi chữ trên nút để báo đang xử lý
+            submitBtn.textContent = 'Đang gửi...';
+            submitBtn.disabled = true;
+
+            try {
+                // Gói hàng và gửi đi qua Web3Forms
+                const response = await fetch('https://api.web3forms.com/submit', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        // Gọi chìa khóa bảo mật từ Vercel
+                        access_key: import.meta.env.PUBLIC_ACCESS_KEY,
+                        email: emailValue,
+                        message: messageValue,
+                        subject: 'Tin nhắn mới từ Chat Widget'
+                    })
+                });
+
+                const result = await response.json();
+
+                if (response.status === 200) {
+                    // Nếu gửi thành công: Ẩn form, hiện màn hình cám ơn
+                    chatBody.style.display = 'none';
+                    chatSuccess.classList.remove('hidden');
+                } else {
+                    // Nếu Web3Forms báo lỗi
+                    console.log(result);
+                    alert('Có lỗi xảy ra từ máy chủ, vui lòng thử lại sau.');
+                    submitBtn.textContent = 'Gửi tin nhắn';
+                    submitBtn.disabled = false;
+                }
+            } catch (error) {
+                // Nếu lỗi rớt mạng
+                console.log(error);
+                alert('Không thể kết nối. Vui lòng kiểm tra lại mạng của bạn.');
+                submitBtn.textContent = 'Gửi tin nhắn';
+                submitBtn.disabled = false;
+            }
         });
     });
 </script>
